@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#0D47A1"            # Dark Blue
+backgroundColor = "#121926"         # Very Dark Navy
+secondaryBackgroundColor = "#1E2D45" # Dark Slate Blue
+textColor = "#E1E8F0"               # Light Gray-Blue
+font = "sans serif"
