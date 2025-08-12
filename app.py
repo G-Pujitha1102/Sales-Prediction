@@ -127,12 +127,187 @@ print("✅ Metrics saved to metrics.csv (Test set only)")
 # -----------------------
 # Sidebar Navigation
 # -----------------------
-menu = st.sidebar.radio("Go to", ["Prediction", "Comparison Metrics", "EDA"])
+menu = st.sidebar.radio("Go to", ["EDA", "Prediction", "Comparison Metrics"])
 
 # -----------------------
-# PREDICTION PAGE
+#EDA PAGE
 # -----------------------
-if menu == "Prediction":
+if menu == "EDA":
+    st.header("📊 Exploratory Data Analysis")
+
+    # Global CSS to limit max width and center content + tab styling
+    st.markdown("""
+    <style>
+    /* Container width and centering */
+    .main > div.block-container {
+        max-width: 900px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+       /* Tab buttons - general */
+    button[role="tab"] {
+        background-color: #f0f4f8 !important; /* Light gray default */
+        color: #334155 !important;             /* Dark text */
+        font-weight: 600 !important;
+        border: none !important;
+        border-radius: 8px 8px 0 0 !important;
+        padding: 8px 16px !important;
+        margin-right: 4px !important;
+        transition: background-color 0.3s ease, color 0.3s ease !important;
+    }
+
+    /* Active tab */
+    button[role="tab"][aria-selected="true"] {
+        background-color: #1e3a8a !important; /* Deep navy blue */
+        color: #dbeafe !important;            /* Light blue text */
+        font-weight: 700 !important;
+        border-bottom: 3px solid #3b82f6 !important; /* Bright blue underline */
+        box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4) !important;
+    }
+
+    /* Hover effect for inactive tabs */
+    button[role="tab"]:not([aria-selected="true"]):hover {
+        background-color: #3b82f6 !important; /* Bright blue */
+        color: white !important;
+        cursor: pointer !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    # Tabs for EDA sections
+    tabs = st.tabs([
+        "Summary & Data",
+        "Correlation & Pairplot",
+        "Distributions",
+        "Boxplots",
+        "Custom Scatter",
+        "Actual vs Predicted"
+    ])
+
+    # Tab 1: Summary & Dataset with download
+    with tabs[0]:
+        with st.container():
+            st.subheader("📄 Dataset Overview")
+            st.dataframe(df, use_container_width=True)
+
+            csv = df.to_csv(index=False)
+            st.download_button("📥 Download Dataset CSV", data=csv, file_name="advertising_data.csv", mime="text/csv")
+
+            st.subheader("📈 Summary Statistics")
+            with st.expander("Show Summary Statistics"):
+                st.write(df.describe())
+
+           
+
+    # Tab 2: Correlation Heatmap & Pairplot side by side
+    with tabs[1]:
+        with st.container():
+            st.subheader("🔗 Correlation Heatmap & Pair Plot")
+            col1, col2 = st.columns(2)
+            with col1:
+                fig, ax = plt.subplots(figsize=(7, 5))
+                sns.heatmap(df.corr(), annot=True, cmap="coolwarm", ax=ax)
+                ax.set_title("Correlation Heatmap", fontsize=14, fontweight='bold')
+                st.pyplot(fig)
+            with col2:
+                sample_df = df.sample(min(50, len(df)), random_state=42)
+                pairplot_fig = sns.pairplot(sample_df, diag_kind="kde", palette="pastel")
+                st.pyplot(pairplot_fig.fig)
+
+    # Tab 3: Histograms side by side (2 per row)
+    with tabs[2]:
+        with st.container():
+            st.subheader("📉 Histograms")
+            numeric_cols = df.select_dtypes(include=["int64", "float64"]).columns
+            sns.set_palette("pastel")
+            for i in range(0, len(numeric_cols), 2):
+                cols = st.columns(2)
+                for j, col_name in enumerate(numeric_cols[i:i+2]):
+                    with cols[j]:
+                        fig, ax = plt.subplots(figsize=(7, 5))
+                        sns.histplot(df[col_name], kde=True, ax=ax)
+                        ax.set_title(f"Distribution of {col_name}", fontsize=14, fontweight='bold')
+                        ax.set_xlabel(col_name)
+                        ax.set_ylabel("Frequency")
+                        st.pyplot(fig)
+
+    # Tab 4: Boxplots side by side (2 per row)
+    with tabs[3]:
+        with st.container():
+            st.subheader("📦 Boxplots for Numerical Features")
+            for i in range(0, len(numeric_cols), 2):
+                cols = st.columns(2)
+                for j, col_name in enumerate(numeric_cols[i:i+2]):
+                    with cols[j]:
+                        fig, ax = plt.subplots(figsize=(7, 5))
+                        sns.boxplot(x=df[col_name], ax=ax, color="#a3cee2")
+                        ax.set_title(f"Boxplot of {col_name}", fontsize=14, fontweight='bold')
+                        st.pyplot(fig)
+
+    # Tab 5: Custom Scatter Plot with selections
+    with tabs[4]:
+        with st.container():
+            st.subheader("📌 Custom Scatter Plot")
+            columns = list(df.columns)
+            x_axis = st.selectbox("Select X-axis", columns, index=0)
+            y_axis = st.selectbox("Select Y-axis", columns, index=1)
+            fig = px.scatter(df, x=x_axis, y=y_axis, size=y_axis, color=y_axis,
+                             title=f"Scatter plot of {x_axis} vs {y_axis}",
+                             width=700, height=500,
+                             color_continuous_scale=px.colors.sequential.Blues  # Changed here
+            )
+            fig.update_layout(
+                xaxis_title=x_axis,
+                yaxis_title=y_axis,
+                title_font_size=18,
+                font=dict(size=14)
+            )
+            st.plotly_chart(fig, use_container_width=False)
+
+    # Tab 6: Actual vs Predicted Sales Line Chart
+    with tabs[5]:
+        with st.container():
+            st.subheader("📊 Actual vs Predicted Sales (Line Chart)")
+            fig = px.line(
+                comparison_df,
+                y=["Actual_Sales", "LR_Prediction", "RF_Prediction"],
+                title="Actual vs Predicted Sales Over Records",
+                width=700,
+                height=500
+            )
+            fig.update_layout(
+                xaxis_title="Record Index",
+                yaxis_title="Sales",
+                title_font_size=18,
+                font=dict(size=14)
+            )
+            st.plotly_chart(fig, use_container_width=False)
+
+            # Optional insight box
+        st.markdown(
+            """
+            <div style='
+                margin-top: 20px;
+                padding: 12px 15px;
+                background-color: #1e3a8a;
+                color: #dbeafe;
+                border-left: 6px solid #3b82f6;
+                border-radius: 8px;
+                font-weight: 600;
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
+            '>
+                Insight: The line chart shows how closely each model's predictions align with the actual sales. Both models perform well, with Random Forest generally fitting better on some records.
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+# -----------------------
+#  PREDICTION PAGE
+# -----------------------
+elif menu == "Prediction":
     st.header("📈 Prediction")
 
     # Metrics Table
@@ -187,7 +362,6 @@ if menu == "Prediction":
             st.info("📊 Predicted Sales are **AVERAGE**.")
         else:
             st.success("🚀 Predicted Sales are **HIGH**!")
-
 # -----------------------
 # COMPARISON METRICS PAGE
 # -----------------------
@@ -220,79 +394,4 @@ elif menu == "Comparison Metrics":
                      title=f"{metric} Comparison", width=600, height=500)
         fig.update_traces(texttemplate='%{text:.4f}', textposition='outside')
         fig.update_layout(yaxis_title=metric, xaxis_title="Model")
-        st.plotly_chart(fig, use_container_width=False)
-
-# -----------------------
-# EDA PAGE
-# -----------------------
-elif menu == "EDA":
-    st.header("📊 Exploratory Data Analysis")
-
-    tabs = st.tabs([
-        "Summary & Data",
-        "Correlation & Pairplot",
-        "Distributions",
-        "Boxplots",
-        "Custom Scatter",
-        "Actual vs Predicted"
-    ])
-
-    with tabs[0]:
-        st.subheader("📄 Dataset Overview")
-        st.dataframe(df, use_container_width=True)
-        csv = df.to_csv(index=False)
-        st.download_button("📥 Download Dataset CSV", data=csv, file_name="advertising_data.csv", mime="text/csv")
-        st.subheader("📈 Summary Statistics")
-        with st.expander("Show Summary Statistics"):
-            st.write(df.describe())
-
-    with tabs[1]:
-        col1, col2 = st.columns(2)
-        with col1:
-            fig, ax = plt.subplots(figsize=(7, 5))
-            sns.heatmap(df.corr(), annot=True, cmap="coolwarm", ax=ax)
-            ax.set_title("Correlation Heatmap", fontsize=14, fontweight='bold')
-            st.pyplot(fig)
-        with col2:
-            sample_df = df.sample(min(50, len(df)), random_state=42)
-            pairplot_fig = sns.pairplot(sample_df, diag_kind="kde", palette="pastel")
-            st.pyplot(pairplot_fig.fig)
-
-    with tabs[2]:
-        numeric_cols = df.select_dtypes(include=["int64", "float64"]).columns
-        for i in range(0, len(numeric_cols), 2):
-            cols = st.columns(2)
-            for j, col_name in enumerate(numeric_cols[i:i+2]):
-                with cols[j]:
-                    fig, ax = plt.subplots(figsize=(7, 5))
-                    sns.histplot(df[col_name], kde=True, ax=ax)
-                    ax.set_title(f"Distribution of {col_name}", fontsize=14, fontweight='bold')
-                    st.pyplot(fig)
-
-    with tabs[3]:
-        for i in range(0, len(numeric_cols), 2):
-            cols = st.columns(2)
-            for j, col_name in enumerate(numeric_cols[i:i+2]):
-                with cols[j]:
-                    fig, ax = plt.subplots(figsize=(7, 5))
-                    sns.boxplot(x=df[col_name], ax=ax, color="#a3cee2")
-                    ax.set_title(f"Boxplot of {col_name}", fontsize=14, fontweight='bold')
-                    st.pyplot(fig)
-
-    with tabs[4]:
-        columns = list(df.columns)
-        x_axis = st.selectbox("Select X-axis", columns, index=0)
-        y_axis = st.selectbox("Select Y-axis", columns, index=1)
-        fig = px.scatter(df, x=x_axis, y=y_axis, size=y_axis, color=y_axis,
-                         title=f"Scatter plot of {x_axis} vs {y_axis}",
-                         width=700, height=500,
-                         color_continuous_scale=px.colors.sequential.Blues)
-        st.plotly_chart(fig, use_container_width=False)
-
-    with tabs[5]:
-        fig = px.line(comparison_df,
-                      y=["Actual_Sales", "LR_Prediction", "RF_Prediction"],
-                      title="Actual vs Predicted Sales (Test Set)",
-                      width=700, height=500)
-        fig.update_layout(xaxis_title="Record Index", yaxis_title="Sales")
         st.plotly_chart(fig, use_container_width=False)
