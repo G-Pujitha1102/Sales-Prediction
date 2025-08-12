@@ -9,7 +9,7 @@ from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 import numpy as np
 import joblib
 # -----------------------
-# Page Config (MUST be first Streamlit command)
+# Page Config 
 # -----------------------
 st.set_page_config(page_title="Sales Prediction App", layout="wide")
 
@@ -91,7 +91,7 @@ df = load_data()
 
 
 # -----------------------
-# Train Models (cached)
+# Train Models 
 # -----------------------
 @st.cache_resource
 def train_models(X, y):
@@ -111,7 +111,7 @@ comparison_df = pd.DataFrame({
     "RF_Prediction": rf_pred
 })
 
-# Save to CSV so we can use in Power BI
+# Save to CSV 
 comparison_df.to_csv("outputs/predictions.csv", index=False)
 
 # Save to 'models' folder
