@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sales Prediction - Project</title>
+  <!-- Modern CSS Styling -->
+<style>
+   /* Base styles */  
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #121212;
+  color: #e0e0e0;
+  scroll-behavior: smooth;
+}
+/* Links */
+a {
+  color: #82cfff;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.3s ease;
+}
+a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #64b5f6;
+  transition: width 0.3s ease;
+}
+a:hover::after, a:focus::after {
+  width: 100%;
+}
+a:hover, a:focus {
+  color: #64b5f6;
+  text-shadow: 0 0 5px #64b5f6;
+}
+
+/* Navbar */
+nav {
+  background: linear-gradient(90deg, #1b1b2f, #263859);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  transition: all 0.3s ease;
+}
+nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+nav ul li a {
+  display: block;
+  padding: 14px 22px;
+  color: #82cfff;
+  font-weight: 600;
+  font-size: 1rem;
+  border-bottom: 3px solid transparent;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s ease;
+}
+nav ul li a:hover, nav ul li a:focus {
+  background-color: rgba(100, 181, 246, 0.2);
+  color: #ffffff;
+}
+nav ul li a.active {
+  background-color: rgba(130, 207, 255, 0.2);
+  border-bottom: 3px solid #82cfff;
+  color: #ffffff;
+}
+
+/* Header and Sections */
+header, section {
+  max-width: 900px;
+  margin: 20px auto;
+  background: linear-gradient(145deg, #1e253a, #2a2a40);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+header:hover, section:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,1);
+}
+h1, h2 { color: #64b5f6; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  overflow-x: auto;
+  display: block;
+}
+th, td {
+  padding: 10px;
+  border: 1px solid #333;
+  text-align: center;
+  font-size: 0.9rem;
+}
+th {
+  background: linear-gradient(90deg, #2a2a40, #1e253a);
+  color: #82cfff;
+}
+
+/* Gallery */
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+.gallery figure {
+  background: linear-gradient(145deg, #2a2a40, #1e253a);
+  padding: 10px;
+  border-radius: 10px;
+  flex: 1 1 300px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(130, 207, 255, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.gallery figure:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(130, 207, 255, 0.5);
+}
+.gallery img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(130, 207, 255, 0.3);
+}
+.gallery img:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 25px rgba(130, 207, 255, 0.6);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(90deg, #1b1b2f, #263859);
+  color: #82cfff;
+  margin-top: 40px;
+  font-size: 0.9em;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.8);
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) { header, section { margin: 1rem; max-width: 100%; padding: 1rem; } .gallery figure { flex: 1 1 48%; } }
+@media (max-width: 768px) { header, section { padding: 0.8rem; } .gallery figure { flex: 1 1 48%; } }
+@media (max-width: 600px) {
+  nav ul { flex-direction: column; align-items: stretch; }
+  nav ul li a { padding: 12px 10px; text-align: center; border-top: 1px solid rgba(100, 181, 246, 0.2); border-bottom: none; }
+  nav ul li:first-child a { border-top: none; }
+  .gallery figure { flex: 1 1 100%; }
+  table, thead, tbody, th, td, tr { display: block; }
+  thead tr { position: absolute; top: -9999px; left: -9999px; }
+  tr { margin-bottom: 1rem; border-bottom: 2px solid #2a2a40; }
+  td { border: none; position: relative; padding-left: 40%; text-align: left; font-size: 0.95rem; }
+  td:before { position: absolute; top: 0; left: 0; width: 38%; padding-left: 0.5rem; font-weight: bold; white-space: nowrap; content: attr(data-label); color: #ccc; }
+  .demo-link { padding: 0.65rem 1.2rem; font-size: 1rem; }
+  #backToTopBtn { bottom: 20px; right: 20px; padding: 10px 14px; font-size: 16px; }
+}
+
+/* Font scaling */
+html { font-size: 16px; }
+@media (max-width: 768px) { html { font-size: 15px; } }
+@media (max-width: 480px) { html { font-size: 14px; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <ul>
+    <li><a href="#objective" class="nav-link">Objective</a></li>
+    <li><a href="#files" class="nav-link">Files</a></li>
+    <li><a href="#methodology" class="nav-link">Methodology</a></li>
+    <li><a href="#technologies" class="nav-link">Technologies Used</a></li>
+    <li><a href="#performance" class="nav-link">Model Performance</a></li>
+    <li><a href="#visualizations" class="nav-link">Visualizations</a></li>
+    <li><a href="#run" class="nav-link">How to Run</a></li>
+    <li><a href="#dataset" class="nav-link">Dataset Source</a></li>
+    <li><a href="#structure" class="nav-link">Repository Structure</a></li>
+    <li><a href="#challenges" class="nav-link">Challenges</a></li>
+    <li><a href="#author" class="nav-link">Author</a></li>
+    <li><a href="#future" class="nav-link">Future Improvements</a></li>
+    <li><a href="#contact" class="nav-link">Contact</a></li>
+  </ul>
+</nav>
+
+<header id="overview">
+  <h1>📌 Sales Prediction – Machine Learning Web App</h1>
+  <p>This project predicts <strong>future sales</strong> using <strong>Machine Learning models</strong> – Linear Regression and Random Forest Regressor – based on advertising datasets. It includes <strong>data preprocessing, model training, evaluation metrics, and visualizations</strong> in a <strong>Streamlit web app</strong>, making it interactive and accessible online.</p>
+  <p>🔗 <a href="https://g-pujitha1102-sales-prediction-app-pfjfaf.streamlit.app" target="_blank">Live Demo</a> | 🔗 <a href="https://github.com/G-Pujitha1102/Sales-Prediction" target="_blank">GitHub Repository</a></p>
+</header>
+
+<section id="objective">
+  <h2>🎯 Objective</h2>
+  <p>Analyze historical advertising data through Exploratory Data Analysis (EDA), uncover patterns between TV, Radio, and Newspaper budgets and sales. Enable users to input budgets and predict sales using Linear Regression and Random Forest models. Classify sales as Low, Average, or High, visually compare predictions through bar charts, and indicate the most accurate model for data-driven marketing and business decisions.</p>
+</section>
+
+<section id="files">
+  <h2>📁 Files</h2>
+  <ul>
+    <li><code>data/advertising.csv</code> — Dataset containing advertising budgets and corresponding sales figures.</li>
+    <li><code>models/linear_regression_model.pkl</code> — Saved Linear Regression model.</li>
+    <li><code>models/random_forest_model.pkl</code> — Saved Random Forest model.</li>
+    <li><code>app.py</code> — Streamlit application enabling predictions, model comparisons, and exploratory data analysis (EDA).</li>
+    <li><code>requirements.txt</code> — List of required Python packages.</li>
+    <li><code>outputs/predictions.csv</code> — Output file with actual vs. predicted sales.</li>
+    <li><code>outputs/metrics.csv</code> — Output file with model evaluation metrics.</li>
+  </ul>
+</section>
+
+<section id="methodology">
+  <h2>🧪 Methodology</h2>
+  <ol>
+    <li><strong>Data Loading & Exploration</strong>
+      <ul>
+        <li>Loaded dataset with advertising budgets and sales data.</li>
+        <li>Explored summary statistics and distributions.</li>
+      </ul>
+    </li>
+    <li><strong>Data Splitting</strong>
+      <ul>
+        <li>The dataset was divided into training and testing subsets (typically 80:20) to ensure unbiased evaluation.</li>
+        <li>Models were trained exclusively on the training data and validated on the test set.</li>
+      </ul>
+    </li>
+    <li><strong>Model Training</strong>
+      <ul>
+        <li>Built Linear Regression and Random Forest models to predict sales.</li>
+        <li>Trained models on the training data features (TV, Radio, Newspaper budgets).</li>
+      </ul>
+    </li>
+    <li><strong>Model Evaluation</strong>
+      <ul>
+        <li>Calculated metrics: R² Score, RMSE (Root Mean Squared Error), MAE (Mean Absolute Error).</li>
+        <li>Compared models based on these metrics.</li>
+      </ul>
+    </li>
+    <li><strong>Visualization & Prediction</strong>
+      <ul>
+        <li>Interactive web app to input advertising budgets and get sales predictions.</li>
+        <li>Visual comparisons of model predictions and EDA plots.</li>
+      </ul>
+    </li>
+  </ol>
+</section>
+
+<section id="technologies">
+  <h2>🔧 Technologies Used</h2>
+  <ul>
+    <li><strong>Programming Language:</strong> Python</li>
+    <li><strong>Libraries:</strong> Streamlit, pandas, scikit-learn, plotly, seaborn, matplotlib, numpy, joblib</li>
+    <li><strong>IDE:</strong> VS Code / Any Python IDE</li>
+    <li><strong>Version Control:</strong> Git and GitHub</li>
+  </ul>
+</section>
+
+<section id="performance">
+  <h2>📊 Model Performance Comparison</h2>
+  <table>
+    <thead>
+      <tr><th>Model</th><th>RMSE</th><th>MAE</th><th>R² Score</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="Model">Linear Regression</td>
+        <td data-label="RMSE">0.905</td>
+        <td data-label="MAE">1.705</td>
+        <td data-label="R² Score">1.274</td>
+      </tr>
+      <tr>
+        <td data-label="Model">Random Forest</td>
+        <td data-label="RMSE">0.953</td>
+        <td data-label="MAE">1.198</td>
+        <td data-label="R² Score">0.917</td>
+      </tr>
+    </tbody>
+  </table>
+  <p><strong>🎉 Random Forest</strong> performed the best based on RMSE, MAE, and R² score.</p>
+  <h3>Comparison Chart</h3>
+  <img width="667" height="519" alt="bar chart R2" src="https://github.com/user-attachments/assets/dfbde79c-beba-4112-a887-f7fb6710faf2" />
+</section>
+
+<section id="visualizations">
+  <h2>📊 Sample Visualizations</h2>
+  <div class="gallery">
+    <figure>
+      <img width="1680" height="923" alt="Application Overview" src="https://github.com/user-attachments/assets/8075e34d-48b7-4ada-9cdf-2deff99932ca" />
+      <figcaption>📌 Application Overview</figcaption>
+    </figure>
+    <figure>
+      <img width="1680" height="923" alt="EDA Page 1" src="https://github.com/user-attachments/assets/3ad2e140-7723-4a84-8ee0-62f6d9b5fb9c" />
+      <figcaption>📊 Exploratory Data Analysis (EDA) Page 1</figcaption>
+    </figure>
+    <figure>
+      <img width="1676" height="925" alt="EDA Page 2" src="https://github.com/user-attachments/assets/b333a082-a100-4657-b164-8dd4ab3d3ec6" />
+      <figcaption>📊 EDA Page 2</figcaption>
+    </figure>
+    <figure>
+      <img width="838" height="937" alt="EDA Page 3" src="https://github.com/user-attachments/assets/43336149-3b84-4dc6-bb14-73003c8cb2e3" />
+      <figcaption>📊 EDA Page 3</figcaption>
+    </figure>
+    <figure>
+      <img width="838" height="934" alt="EDA Page 4" src="https://github.com/user-attachments/assets/6c9a4062-fbc8-4e13-b38b-e2234372d4b6" />
+      <figcaption>📊 EDA Page 4</figcaption>
+    </figure>
+    <figure>
+      <img width="1680" height="923" alt="EDA Page 5" src="https://github.com/user-attachments/assets/08670aa2-3284-45e7-8ac0-8ab00f3097c8" />
+      <figcaption>📊 EDA Page 5</figcaption>
+    </figure>
+    <figure>
+      <img width="1680" height="924" alt="EDA Page 6" src="https://github.com/user-attachments/assets/188345a3-873d-47e7-8e0a-06b8f5c7cc45" />
+      <figcaption>📊 EDA Page 6</figcaption>
+    </figure>
+    <figure>
+      <img width="838" height="935" alt="Model Comparison Page 1" src="https://github.com/user-attachments/assets/d2b8f464-10ea-4ae0-9779-9c23de0e9b2b" />
+      <figcaption>⚙️ Model Comparison Metrics Page 1</figcaption>
+    </figure>
+    <figure>
+      <img width="838" height="936" alt="Model Comparison Page 2" src="https://github.com/user-attachments/assets/9a1fa7f7-03df-4310-8ae6-b342fb2b482c" />
+      <figcaption>⚙️ Model Comparison Metrics Page 2</figcaption>
+    </figure>
+    <figure>
+      <img width="1680" height="926" alt="Prediction Form Page 1" src="https://github.com/user-attachments/assets/44156753-6d46-43cf-9d6b-949922534943" />
+      <figcaption>🧮 Sales Prediction Form</figcaption>
+    </figure>
+    <figure>
+      <img width="1680" height="928" alt="Prediction Results Page 2" src="https://github.com/user-attachments/assets/50853ace-145d-4005-889a-441f6d09fb82" />
+      <figcaption>📈 Prediction Results Visualization</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="run">
+  <h2>🚀 How to Run</h2>
+  <ol>
+    <li>Clone the repo:<br />
+      <code>git clone https://github.com/G-Pujitha1102/Sales-Prediction.git</code>
+    </li>
+    <li>Navigate to project folder:<br />
+      <code>cd Sales-Prediction</code>
+    </li>
+    <li>Create and activate a virtual environment (optional but recommended):<br />
+      <code>python -m venv venv</code><br />
+      <code>source venv/scripts/activate</code>
+    </li>
+    <li>Install dependencies:<br />
+      <code>pip install -r requirements.txt</code>
+    </li>
+    <li>Run the Streamlit app:<br />
+      <code>streamlit run app.py</code>
+    </li>
+  </ol>
+</section>
+
+<section id="dataset">
+  <h2>📎 Dataset Source</h2>
+  <p><a href="https://www.kaggle.com/code/ashydv/sales-prediction-simple-linear-regression/input" target="_blank" rel="noopener noreferrer">
+  Sales Prediction Dataset - Kaggle
+</a></p>
+</section>
+
+<section id="structure">
+  <h2>🗃️ Repository Structure</h2>
+  <pre>
+📁 Sales-Prediction/
+├── data/
+│   └── advertising.csv
+├── models/
+│   ├── linear_regression_model.pkl
+│   └── random_forest_model.pkl
+├── outputs/
+│   ├── metrics.csv
+│   └── predictions.csv
+├── app.py
+├── requirements.txt
+├── README.md
+  </pre>
+</section>
+
+<section id="challenges">
+  <h2>💡 Challenges Faced &amp; What I Learned</h2>
+  <ul>
+   <li>Preprocessing and feature selection to improve model accuracy.</li>
+    <li>Comparing regression models using multiple metrics.</li>
+    <li>Visualizing model performance using Plotly and Seaborn.</li>
+    <li>Building an interactive Streamlit dashboard for end-user predictions.</li>
+    <li>Managing project structure and saving models with Joblib.</li>
+    </ul>
+</section>
+
+<section id="author">
+  <h2>🙋‍♀️ Author</h2>
+  <p><strong>G. Pujitha</strong><br />🎓 B.Tech - Computer Science Engineering<br /><a href="https://github.com/G-Pujitha1102" target="_blank" rel="noopener noreferrer">GitHub Profile</a></p>
+</section>
+
+<section id="future">
+  <h2>🔮 Future Improvements</h2>
+  <ul>
+    <li>Add more advanced models like Gradient Boosting and XGBoost.</li>
+    <li>Deploy on other platforms like Heroku or AWS.</li>
+    <li>Add user authentication for saving predictions.</li>
+    <li>Enable batch predictions via CSV upload.</li>
+    <li>Improve visualizations and add interactive filtering options.</li>
+  </ul>
+</section>
+
+<section id="contact">
+  <h2>📬 Contact</h2>
+  <p>If you'd like to connect, feel free to reach out via:</p>
+  <ul>
+    <li><a href="mailto:gpujitha909@gmail.com">gpujitha909@gmail.com</a></li>
+    <li><a href="https://www.linkedin.com/in/g-pujitha" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+    <li><a href="https://github.com/G-Pujitha1102" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+  </ul>
+</section>
+  <!-- JS -->
+<script>
+// Smooth scroll for nav links
+document.querySelectorAll('nav ul li a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const targetId = link.getAttribute('href').substring(1);
+    const target = document.getElementById(targetId);
+    if (target) { target.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+// Highlight active nav item on scroll
+const sections = document.querySelectorAll('section, header');
+const navLinks = document.querySelectorAll('nav ul li a');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  const scrollPos = window.pageYOffset || document.documentElement.scrollTop;
+  sections.forEach(section => {
+    if (section.offsetTop <= scrollPos + 80) {
+      current = section.getAttribute('id') || 'overview';
+    }
+  });
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href').substring(1) === current) {
+      link.classList.add('active');
+    }
+  });
+});
+
+// Back to top button
+const btn = document.createElement('button');
+btn.textContent = '↑';
+btn.id = 'backToTopBtn';
+btn.style.display = 'none';
+btn.style.position = 'fixed';
+btn.style.bottom = '20px';
+btn.style.right = '20px';
+btn.style.padding = '10px 14px';
+btn.style.fontSize = '16px';
+btn.style.zIndex = '1000';
+btn.style.border = 'none';
+btn.style.borderRadius = '6px';
+btn.style.backgroundColor = '#64b5f6';
+btn.style.color = '#fff';
+btn.style.cursor = 'pointer';
+document.body.appendChild(btn);
+
+btn.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+window.addEventListener('scroll', () => {
+  if (window.pageYOffset > 300) { btn.style.display = 'block'; }
+  else { btn.style.display = 'none'; }
+});
+</script>
+
+</body>
+</html>
