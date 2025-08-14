@@ -1,11 +1,20 @@
-# 📊 Sales Prediction App
+# **Sales Prediction – Machine Learning Web App**
 
-This project predicts sales based on advertising budgets across TV, Radio, and Newspaper using Machine Learning models. It analyzes the dataset, visualizes insights, builds and compares Linear Regression and Random Forest models, and provides an interactive web app for sales prediction.
+🔗 **[Live Demo](https://g-pujitha1102-sales-prediction-app-pfjfaf.streamlit.app)**  
+🔗 **[GitHub Repository](https://github.com/G-Pujitha1102/Sales-Prediction)**  
 
 ---
 
-## 🎯 Objective  
-To predict sales using advertising budgets as input features and identify which model performs better to help optimize marketing strategies.
+## **📌 Project Overview**
+
+This project predicts **future sales** using **Machine Learning models** – Linear Regression and Random Forest Regressor – based on provided sales datasets. It includes **data preprocessing, model training, evaluation metrics, and visualizations** in a **Streamlit web app**, making it interactive and accessible online.
+
+---
+
+## **🎯 Objective**
+
+ Analyze historical advertising data through Exploratory Data Analysis (EDA), uncover patterns and relationships between TV, Radio, and Newspaper budgets and sales.Enable users to input budgets and predict sales using both Linear Regression and Random Forest models.Classify sales as Low, Average, or High.Visually compare the predictions through bar charts.Compare model performance using evaluation metrics (RMSE, MAE, R²) and indicate the most accurate model for data-driven marketing and business decisions.
+
 
 ---
 
@@ -61,31 +70,31 @@ To predict sales using advertising budgets as input features and identify which 
 
 comparision chart-<img width="556" height="497" alt="bar chart R2" src="https://github.com/user-attachments/assets/aefd9ac7-0056-4db9-abaa-533525a9e539" />
 
+---
+
 ## 📊 Bar Chart Comparison
 
 Bar charts were created using Plotly to visually compare RMSE, MAE, and R² values for both models.
 
-
+---
 
 ## 📊 Sample Visualizations
-
-*Replace these with your own app screenshots or GIFs.*
-
-- Sales Distribution Histogram <img width="1402" height="577" alt="histograms" src="https://github.com/user-attachments/assets/1e4c6c4e-6f39-4d60-8ba9-7669763d2a1d" />
-
-- Correlation Heatmap <img width="1326" height="694" alt="correlation heatmap and plot" src="https://github.com/user-attachments/assets/b8164a10-28a7-4892-a0ae-7312b020d650" />
-
-- Actual vs Predicted Sales Line Chart <img width="668" height="527" alt="actual vs predicted sales" src="https://github.com/user-attachments/assets/b62032a7-3ebb-4eb0-831d-f47dea99b3d8" />
-
-- Model Prediction Comparison Bar Chart
- <img width="556" height="497" alt="bar chart R2" src="https://github.com/user-attachments/assets/d575df59-6007-48e4-b9c7-a89c9804d403" />
-<img width="552" height="500" alt="bar chart RMSE" src="https://github.com/user-attachments/assets/e6c7f46f-96ed-43e6-9cf8-11185d0fb781" />
-<img width="558" height="512" alt="bar chart MAE" src="https://github.com/user-attachments/assets/ff0cfa28-3b31-4a13-95d5-7ef73d452206" />
-
-- Scatter 
-Plot: news paper vs Sales<img width="701" height="678" alt="customscatterplot 1" src="https://github.com/user-attachments/assets/44a3414f-55ea-4c78-9017-bf352ad54e76" />
-
--  
+**📌 Application Overview**
+<img width="1680" height="923" alt="eda page 1" src="https://github.com/user-attachments/assets/8075e34d-48b7-4ada-9cdf-2deff99932ca" />
+**📊 Exploratory Data Analysis (EDA)**
+<img width="1680" height="923" alt="eda page 1" src="https://github.com/user-attachments/assets/3ad2e140-7723-4a84-8ee0-62f6d9b5fb9c" />
+<img width="1676" height="925" alt="eda page 2" src="https://github.com/user-attachments/assets/b333a082-a100-4657-b164-8dd4ab3d3ec6" />
+<img width="838" height="937" alt="eda page 3" src="https://github.com/user-attachments/assets/43336149-3b84-4dc6-bb14-73003c8cb2e3" />
+<img width="838" height="934" alt="eda page 4" src="https://github.com/user-attachments/assets/6c9a4062-fbc8-4e13-b38b-e2234372d4b6" />
+<img width="1680" height="923" alt="eda page 5" src="https://github.com/user-attachments/assets/08670aa2-3284-45e7-8ac0-8ab00f3097c8" />
+<img width="1680" height="924" alt="eda page 6" src="https://github.com/user-attachments/assets/188345a3-873d-47e7-8e0a-06b8f5c7cc45" />
+**⚙️ Model Comparison Metrics**
+<img width="838" height="935" alt="comparision page 1" src="https://github.com/user-attachments/assets/d2b8f464-10ea-4ae0-9779-9c23de0e9b2b" />
+<img width="838" height="936" alt="comparision page 2" src="https://github.com/user-attachments/assets/9a1fa7f7-03df-4310-8ae6-b342fb2b482c" />
+**🧮 Sales Prediction Form**
+<img width="1680" height="926" alt="prediction page 1" src="https://github.com/user-attachments/assets/44156753-6d46-43cf-9d6b-949922534943" />
+**📈 Prediction Results Visualization**
+<img width="1680" height="928" alt="prediction page 2" src="https://github.com/user-attachments/assets/50853ace-145d-4005-889a-441f6d09fb82" />
 
 ---
 
@@ -106,12 +115,16 @@ source venv/scripts/activate
 pip install -r requirements.txt
 5.Run the Streamlit app:
         bash
-streamlit run app.py
+streamlit run app.py  
+
+---
    
-📎 Dataset Source
+## 📎 Dataset Source
 👉 Sales Prediction (Simple Linear Regression) - Kaggle
 
-🗃️ Repository Structure
+---
+
+## 🗃️ Repository Structure
 
 📁 Sales-Prediction/
 ├── data/
@@ -126,7 +139,9 @@ streamlit run app.py
 ├── requirements.txt
 ├── README.md
 
-💡 Challenges Faced & What I Learned
+---
+
+## 💡 Challenges Faced & What I Learned
 
 -Preprocessing and feature selection to improve model accuracy.
 -Comparing regression models using multiple metrics.
@@ -134,17 +149,16 @@ streamlit run app.py
 -Building an interactive Streamlit dashboard for end-user predictions.
 -Managing project structure and saving models with Joblib.
 
+---
 
-🔗 Live Demo
-Try the app online:
-👉 Sales Prediction Live Demo
-
-🙋‍♀️ Author
+## 🙋‍♀️ Author
 G. Pujitha
 🎓 B.Tech - Computer Science Engineering
 GitHub Profile
 
-🔮 Future Improvements
+---
+
+## 🔮 Future Improvements
 
 -Add more advanced models like Gradient Boosting and XGBoost.
 -Deploy on other platforms like Heroku or AWS.
